@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Formik } from 'formik';
@@ -34,9 +33,7 @@ const userValidation = yup.object({
 });
 
 export default function Main() {
-  const [users, setUsers] = useState([
-
-  ]);
+  const [users, setUsers] = useState([]);
 
   const addUser = user => {
     setUsers(currentUsers => {
@@ -69,7 +66,7 @@ export default function Main() {
                 onBlur={handleBlur('name')}
                 value={values.name}
               />
-              <Text>{errors.name || touched.name}</Text>
+              <Text>{touched.name && errors.name}</Text>
 
               <Input
                 onChangeText={handleChange('email')}
@@ -77,7 +74,7 @@ export default function Main() {
                 onBlur={handleBlur('email')}
                 value={values.email}
               />
-              <Text>{errors.email}</Text>
+              <Text>{touched.email && errors.email}</Text>
 
               <Input
                 onChangeText={handleChange('age')}
@@ -86,7 +83,7 @@ export default function Main() {
                 value={values.age}
               />
 
-              <Text>{errors.age}</Text>
+              <Text>{touched.age && errors.age}</Text>
 
               <SubmitButton onPress={handleSubmit} title="Submit">
                 <Icon name="add" size={20} color="#FFF" />
