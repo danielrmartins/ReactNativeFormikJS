@@ -68,3 +68,9 @@ export const Age = styled.Text`
   margin-top: 5px;
   text-align: center;
 `;
+
+export const Text = styled.Text`
+  font-size: 10px;
+  color: #ff0000;
+  text-align: left;
+`;

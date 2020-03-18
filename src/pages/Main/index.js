@@ -1,8 +1,8 @@
+/* eslint-disable prettier/prettier */
 import React, { useState } from 'react';
-
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
 import { Formik } from 'formik';
+import * as yup from 'yup';
 
 import {
   Container,
@@ -14,66 +14,85 @@ import {
   Name,
   Bio,
   Age,
+  Text,
 } from './styles';
+
+const userValidation = yup.object({
+  name: yup
+    .string()
+    .required('Nome deve ser preenchido')
+    .min(4, 'Mínimo de 4 letras'),
+  email: yup
+    .string()
+    .email('Email inválido')
+    .required('Email deve ser preenchido'),
+  age: yup
+    .number()
+    .required('Idade deve ser preenchida')
+    .min(1)
+    .max(130),
+});
 
 export default function Main() {
   const [users, setUsers] = useState([
-    { name: 'Daniel', email: 'daniel.martins@kbase.com.br', age: 33 },
-    { name: 'Foca', email: 'foca@kbase.com.br', age: 10 },
+
   ]);
 
   const addUser = user => {
     setUsers(currentUsers => {
       return [user, ...currentUsers];
     });
-
-    console.log(user);
   };
 
   return (
     <Container>
-      {/*       <Form>
-        <Input
-          autoCorrect={false}
-          autoCapitalize="none"
-          placeholder="Adicionar usuário"
-        />
-        <SubmitButton>
-          <Icon name="add" size={20} color="#FFF" />
-        </SubmitButton>
-      </Form> */}
-
       <Formik
         initialValues={{ name: '', email: '', age: '' }}
-        onSubmit={values => console.log(values)}
+        validationSchema={userValidation}
+        onSubmit={(values, actions) => {
+          actions.resetForm();
+          addUser(values);
+        }}
       >
-        {({ handleChange, handleBlur, handleSubmit, values }) => (
-          <View>
-            <Input
-              onChangeText={handleChange('name')}
-              placeholder="Name"
-              onBlur={handleBlur('name')}
-              value={values.name}
-            />
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          errors,
+          touched,
+        }) => (
+            <View>
+              <Input
+                onChangeText={handleChange('name')}
+                placeholder="Name"
+                onBlur={handleBlur('name')}
+                value={values.name}
+              />
+              <Text>{errors.name || touched.name}</Text>
 
-            <Input
-              onChangeText={handleChange('email')}
-              placeholder="Email"
-              onBlur={handleBlur('email')}
-              value={values.email}
-            />
+              <Input
+                onChangeText={handleChange('email')}
+                placeholder="Email"
+                onBlur={handleBlur('email')}
+                value={values.email}
+              />
+              <Text>{errors.email}</Text>
 
-            <Input
-              onChangeText={handleChange('age')}
-              placeholder="Age"
-              onBlur={handleBlur('age')}
-              value={values.age}
-            />
-            <SubmitButton onPress={handleSubmit} title="Submit">
-              <Icon name="add" size={20} color="#FFF" />
-            </SubmitButton>
-          </View>
-        )}
+              <Input
+                onChangeText={handleChange('age')}
+                placeholder="Age"
+                onBlur={handleBlur('age')}
+                value={values.age}
+              />
+
+              <Text>{errors.age}</Text>
+
+              <SubmitButton onPress={handleSubmit} title="Submit">
+                <Icon name="add" size={20} color="#FFF" />
+              </SubmitButton>
+            </View>
+          )}
       </Formik>
 
       <List
